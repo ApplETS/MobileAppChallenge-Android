@@ -3,5 +3,6 @@
 
     <string name="hello">Hello World, MobileAppChallengeActivity!</string>
     <string name="app_name">MobileAppChallenge</string>
+    <string name="host">http://highwizard.com:8080/</string>
 
 </resources>

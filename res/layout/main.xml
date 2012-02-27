@@ -4,9 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="fill_parent"
+    <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:numColumns="3" >
+        <!-- Preview: listitem=@layout/dashboard_icon -->
+    </GridView>
 
 </LinearLayout>
