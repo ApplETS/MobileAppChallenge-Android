@@ -11,65 +11,68 @@ import com.applets.mobile.challenge.R;
 
 public class GridIconAdapter extends BaseAdapter {
 
-    public class IconWrapper {
+	//th wrapper contains the ui info
+	public class IconWrapper {
 
-	private TextView label;
-	private View v;
+		private TextView label;
+		private View v;
 
-	public IconWrapper(View v) {
-	    this.v = v;
+		public IconWrapper(View v) {
+			this.v = v;
+		}
+
+		public TextView getLabel() {
+			if (label == null) {
+				label = (TextView) v.findViewById(R.id.textView1);
+			}
+			return label;
+		}
+
+		public void setLabel(String text) {
+			getLabel().setText(text);
+		}
 	}
 
-	public TextView getLabel() {
-	    if (label == null) {
-		label = (TextView) v.findViewById(R.id.textView1);
-	    }
-	    return label;
+	//list of button labels
+	//TODO : change to a string-array
+	private static final String[] labels = new String[] { "Artist", "Albums",
+			"Genre", "Songs", "Playlist" };
+	private Context ctx;
+
+	public GridIconAdapter(Context ctx) {
+		this.ctx = ctx;
 	}
 
-	public void setLabel(String text) {
-	    getLabel().setText(text);
+	@Override
+	public int getCount() {
+		return labels.length;
 	}
-    }
 
-    private static final String[] labels = new String[] { "Artist", "Albums",
-	    "Genre", "Songs", "Playlist" };
-    private Context ctx;
-
-    public GridIconAdapter(Context ctx) {
-	this.ctx = ctx;
-
-    }
-
-    @Override
-    public int getCount() {
-	return labels.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-	return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-	return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-	IconWrapper wrapper;
-	View v = convertView;
-	if (v == null) {
-	    v = LayoutInflater.from(ctx).inflate(R.layout.dashboard_icon, null);
-	    wrapper = new IconWrapper(v);
-	    v.setTag(wrapper);
-	} else {
-	    wrapper = (IconWrapper) v.getTag();
+	@Override
+	public Object getItem(int position) {
+		return null;
 	}
-	wrapper.setLabel(labels[position]);
 
-	return v;
-    }
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		IconWrapper wrapper;
+		View v = convertView;
+		if (v == null) {
+			//inflate the xml layout from context
+			v = LayoutInflater.from(ctx).inflate(R.layout.dashboard_icon, null);
+			wrapper = new IconWrapper(v);
+			v.setTag(wrapper);
+		} else {
+			wrapper = (IconWrapper) v.getTag();
+		}
+		wrapper.setLabel(labels[position]);
+
+		return v;
+	}
 
 }

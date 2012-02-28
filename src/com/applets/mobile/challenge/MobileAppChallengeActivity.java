@@ -1,7 +1,5 @@
 package com.applets.mobile.challenge;
 
-import com.applets.mobile.challenge.adapters.GridIconAdapter;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,27 +8,33 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-public class MobileAppChallengeActivity extends Activity implements OnItemClickListener {
-    
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        GridView g = (GridView)findViewById(R.id.gridView1);
-        g.setAdapter(new GridIconAdapter(this));
-        g.setOnItemClickListener(this);
-    }
+import com.applets.mobile.challenge.adapters.GridIconAdapter;
 
-    @Override
-    public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
-//	Intent intent = null;
-	switch(position){
-		default:
-//		    intent = new Intent();
-		    break;
+public class MobileAppChallengeActivity extends Activity implements
+		OnItemClickListener {
+
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		GridView g = (GridView) findViewById(R.id.gridView1);
+		g.setAdapter(new GridIconAdapter(this));
+		g.setOnItemClickListener(this);
 	}
-//	startActivity(intent);
-    }
+
+	@Override
+	public void onItemClick(AdapterView<?> adapter, View view, int position,
+			long id) {
+		 Intent intent = null;
+		switch (position) {
+		default:
+			 intent = new Intent(this, BasicListActivity.class);
+			 intent.putExtra("type", "Artist");
+			 intent.putExtra("query", "all");
+			break;
+		}
+		 startActivity(intent);
+	}
 }
