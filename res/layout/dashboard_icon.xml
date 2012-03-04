@@ -8,13 +8,14 @@
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher" android:layout_gravity="center"/>
+        android:src="@drawable/ic_launcher" android:layout_gravity="center"
+        android:contentDescription="icons"/>
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Large Text"
+        android:text="@string/large_text"
         android:textAppearance="?android:attr/textAppearanceLarge" android:layout_gravity="center"/>
 
 </LinearLayout>

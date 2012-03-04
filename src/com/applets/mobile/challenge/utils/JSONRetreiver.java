@@ -12,51 +12,63 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class JSONRetreiver extends AsyncTask<String, Void, Void> {
-	private IAsyncTaskListener listener;
+public class JSONRetreiver extends AsyncTask<String, Integer, JSONObject> {
+    private IAsyncTaskListener listener;
 
-	public JSONRetreiver(final IAsyncTaskListener listener) {
-		this.listener = listener;
-	}
+    public JSONRetreiver(final IAsyncTaskListener listener) {
+	this.listener = listener;
+    }
 
-	@Override
-	protected Void doInBackground(String... params) {
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet get = new HttpGet(params[0]);
+    @Override
+    protected JSONObject doInBackground(String... params) {
+	onPreExecute();
+	StringBuilder builder = new StringBuilder();
+	HttpClient client = new DefaultHttpClient();
+	HttpGet get = new HttpGet(params[0]);
+	JSONObject json = null;
+	try {
+	    HttpResponse r = client.execute(get);
+	    StatusLine status = r.getStatusLine();
 
-		try {
-			HttpResponse r = client.execute(get);
-			StatusLine status = r.getStatusLine();
-
-			if (status.getStatusCode() == 200) {
-				HttpEntity entity = r.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-			} else {
-				Log.e(JSONRetreiver.class.toString(), "Failed to download file");
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+	    if (status.getStatusCode() == 200) {
+		HttpEntity entity = r.getEntity();
+		InputStream content = entity.getContent();
+		BufferedReader reader = new BufferedReader(
+			new InputStreamReader(content));
+		String line;
+		while ((line = reader.readLine()) != null) {
+		    onProgressUpdate(1);
+		    builder.append(line);
 		}
-
-		return null;
+		reader.close();
+		try {
+		    json = new JSONObject(builder.toString());
+		} catch (JSONException e) {
+		    onCancelled();
+		    Log.e(JSONRetreiver.class.toString(),
+			    "Failed to parse data");
+		}
+	    } else {
+		onCancelled();
+		Log.e(JSONRetreiver.class.toString(), "Failed to download file");
+	    }
+	} catch (ClientProtocolException e) {
+	    e.printStackTrace();
+	} catch (IOException e) {
+	    e.printStackTrace();
 	}
 
-	@Override
-	protected void onPostExecute(Void result) {
-		listener.onPostExecute();
-		super.onPostExecute(result);
-	}
+	return json;
+    }
+
+    @Override
+    protected void onPostExecute(JSONObject result) {
+	listener.onPostExecute(result);
+    }
 }

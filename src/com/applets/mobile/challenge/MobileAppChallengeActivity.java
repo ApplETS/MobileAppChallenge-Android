@@ -11,30 +11,30 @@ import android.widget.GridView;
 import com.applets.mobile.challenge.adapters.GridIconAdapter;
 
 public class MobileAppChallengeActivity extends Activity implements
-		OnItemClickListener {
+	OnItemClickListener {
 
-	/** Called when the activity is first created. */
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+    /** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.main);
 
-		GridView g = (GridView) findViewById(R.id.gridView1);
-		g.setAdapter(new GridIconAdapter(this));
-		g.setOnItemClickListener(this);
+	GridView g = (GridView) findViewById(R.id.gridView1);
+	g.setAdapter(new GridIconAdapter(this));
+	g.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapter, View view, int position,
+	    long id) {
+	Intent intent = null;
+	switch (position) {
+	default:
+	    intent = new Intent(this, BasicListActivity.class);
+	    intent.putExtra("type", "artist");
+	    intent.putExtra("query", "all");
+	    break;
 	}
-
-	@Override
-	public void onItemClick(AdapterView<?> adapter, View view, int position,
-			long id) {
-		 Intent intent = null;
-		switch (position) {
-		default:
-			 intent = new Intent(this, BasicListActivity.class);
-			 intent.putExtra("type", "Artist");
-			 intent.putExtra("query", "all");
-			break;
-		}
-		 startActivity(intent);
-	}
+	startActivity(intent);
+    }
 }

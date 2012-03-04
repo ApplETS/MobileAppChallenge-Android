@@ -1,37 +1,53 @@
 package com.applets.mobile.challenge;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ListView;
 
 import com.applets.mobile.challenge.utils.AdapterFactory;
 import com.applets.mobile.challenge.utils.IAsyncTaskListener;
 import com.applets.mobile.challenge.utils.JSONRetreiver;
 
 public class BasicListActivity extends ListActivity implements
-		IAsyncTaskListener {
+	IAsyncTaskListener {
 
-	private String query;
-	private String type;
+    private String query;
+    private String type;
+    // Handles the onPostExecute
+    private final Handler handler = new Handler();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.basic_list);
 
-		Bundle b = getIntent().getExtras();
-		query = b.getString("type");
-		type = b.getString("type");
-		new JSONRetreiver(this).execute("http://192.168.1.3:8080/" + query);
+	Bundle b = getIntent().getExtras();
+	query = b.getString("query");
+	type = b.getString("type");
+	new JSONRetreiver(this).execute("http://highwizard.com:8080/" + type);
+    }
 
-	}
+    @Override
+    public void onPostExecute(final JSONObject result) {
+	final Context ctx = this;
+	handler.post(new Runnable() {
 
-	@Override
-	public void onPostExecute() {
-		setContentView(R.layout.basic_list);
-		setListAdapter(AdapterFactory.getInstance().getAdapter(type,this,
-				new JSONArray()));
-	}
+	    @Override
+	    public void run() {
+		setListAdapter(AdapterFactory.getInstance().getAdapter(type,
+			ctx, result));
+	    }
+	});
+    }
 
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+	super.onListItemClick(l, v, position, id);
+
+    }
 }

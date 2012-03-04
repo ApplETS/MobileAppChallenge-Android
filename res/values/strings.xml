@@ -5,4 +5,11 @@
     <string name="app_name">MobileAppChallenge</string>
     <string name="host">http://highwizard.com:8080/</string>
 
-</resources>
+    <string-array name="icon_labels">
+        <item>Artist</item>
+        <item>Albums</item>
+        <item>Genre</item>
+        <item>Songs</item>
+        <item>Playlist</item>
+    </string-array>
+<string name="large_text">Large Text</string></resources>
