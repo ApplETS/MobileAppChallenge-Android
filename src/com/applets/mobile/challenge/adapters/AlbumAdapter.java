@@ -13,14 +13,14 @@ import android.widget.TextView;
 
 import com.applets.mobile.challenge.R;
 
-public class ArtistAdapter extends BaseAdapter {
+public class AlbumAdapter extends BaseAdapter {
 
-	private class ArtistWrapper {
+	private class AlbumWrapper {
 
 		private View view;
 		private TextView label;
 
-		public ArtistWrapper(View view) {
+		public AlbumWrapper(View view) {
 			this.view = view;
 		}
 
@@ -36,14 +36,14 @@ public class ArtistAdapter extends BaseAdapter {
 		}
 
 	}
-
+	
 	private Context ctx;
 	private JSONObject json;
 	private JSONArray folders;
 	private JSONArray images;
 	private JSONArray files;
-
-	public ArtistAdapter(Context ctx, JSONObject array) {
+	
+	public AlbumAdapter(Context ctx, JSONObject array) {
 		this.ctx = ctx;
 		this.json = array;
 
@@ -75,15 +75,15 @@ public class ArtistAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ArtistWrapper wrapper;
+		AlbumWrapper wrapper;
 		View v = convertView;
 		if (v == null) {
 			// inflate the xml row layout from context
 			v = LayoutInflater.from(ctx).inflate(R.layout.basic_row, null);
-			wrapper = new ArtistWrapper(v);
+			wrapper = new AlbumWrapper(v);
 			v.setTag(wrapper);
 		} else {
-			wrapper = (ArtistWrapper) v.getTag();
+			wrapper = (AlbumWrapper) v.getTag();
 		}
 		wrapper.setLabel(getLabel(position));
 		return v;

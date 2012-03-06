@@ -19,56 +19,56 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class JSONRetreiver extends AsyncTask<String, Integer, JSONObject> {
-    private IAsyncTaskListener listener;
+	private IAsyncTaskListener listener;
 
-    public JSONRetreiver(final IAsyncTaskListener listener) {
-	this.listener = listener;
-    }
-
-    @Override
-    protected JSONObject doInBackground(String... params) {
-	onPreExecute();
-	StringBuilder builder = new StringBuilder();
-	HttpClient client = new DefaultHttpClient();
-	HttpGet get = new HttpGet(params[0]);
-	JSONObject json = null;
-	try {
-	    HttpResponse r = client.execute(get);
-	    StatusLine status = r.getStatusLine();
-
-	    if (status.getStatusCode() == 200) {
-		HttpEntity entity = r.getEntity();
-		InputStream content = entity.getContent();
-		BufferedReader reader = new BufferedReader(
-			new InputStreamReader(content));
-		String line;
-		while ((line = reader.readLine()) != null) {
-		    onProgressUpdate(1);
-		    builder.append(line);
-		}
-		reader.close();
-		try {
-		    json = new JSONObject(builder.toString());
-		} catch (JSONException e) {
-		    onCancelled();
-		    Log.e(JSONRetreiver.class.toString(),
-			    "Failed to parse data");
-		}
-	    } else {
-		onCancelled();
-		Log.e(JSONRetreiver.class.toString(), "Failed to download file");
-	    }
-	} catch (ClientProtocolException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    e.printStackTrace();
+	public JSONRetreiver(final IAsyncTaskListener listener) {
+		this.listener = listener;
 	}
 
-	return json;
-    }
+	@Override
+	protected JSONObject doInBackground(String... params) {
+		onPreExecute();
+		StringBuilder builder = new StringBuilder();
+		HttpClient client = new DefaultHttpClient();
+		HttpGet get = new HttpGet(params[0]);
+		JSONObject json = null;
+		try {
+			HttpResponse r = client.execute(get);
+			StatusLine status = r.getStatusLine();
 
-    @Override
-    protected void onPostExecute(JSONObject result) {
-	listener.onPostExecute(result);
-    }
+			if (status.getStatusCode() == 200) {
+				HttpEntity entity = r.getEntity();
+				InputStream content = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					onProgressUpdate(1);
+					builder.append(line);
+				}
+				reader.close();
+				try {
+					json = new JSONObject(builder.toString());
+				} catch (JSONException e) {
+					onCancelled();
+					Log.e(JSONRetreiver.class.toString(),
+							"Failed to parse data");
+				}
+			} else {
+				onCancelled();
+				Log.e(JSONRetreiver.class.toString(), "Failed to download file");
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return json;
+	}
+
+	@Override
+	protected void onPostExecute(JSONObject result) {
+		listener.onPostExecute(result);
+	}
 }
