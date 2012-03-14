@@ -4,12 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,6 +28,7 @@ public class MobileAppChallengeActivity extends Activity implements
     private Menu menu;
     private SharedPreferences preferences;
     private String TOKEN = "NONE";
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,26 +38,51 @@ public class MobileAppChallengeActivity extends Activity implements
 	GridView g = (GridView) findViewById(R.id.gridView1);
 	g.setAdapter(new GridIconAdapter(this));
 	g.setOnItemClickListener(this);
-	
+
 	// Initialize preferences
 	preferences = PreferenceManager.getDefaultSharedPreferences(this);
-	//try login
-	String u = preferences.getString("username", "NONE");
-	String p = preferences.getString("password", "NONE");
-	
+	// try login
+	String h = preferences.getString("host", TOKEN);
+	String u = preferences.getString("username", TOKEN);
+	String p = preferences.getString("password", TOKEN);
+
+	if (u.equalsIgnoreCase(TOKEN) || p.equalsIgnoreCase(TOKEN)
+		|| h.equalsIgnoreCase(TOKEN)) {
+	    showAlert();
+	}
+
 	new JSONRetreiver(new IAsyncTaskListener() {
-	    
+
 	    @Override
 	    public void onPostExecute(JSONObject result) {
 		try {
-		    TOKEN = result.getString("token");	
+		    TOKEN = result.getString("token");
 		} catch (JSONException e) {
-		    // TODO Auto-generated catch block
 		    e.printStackTrace();
 		}
 	    }
-	}).execute(getString(R.string.host)+"/login?username="+u+"&password="+p);
+	}).execute(h + "/login?username=" + u + "&password=" + p);
 
+    }
+
+    private void showAlert() {
+	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	builder.setMessage(getString(R.string.hello))
+		.setCancelable(false)
+		.setPositiveButton("Yes",
+			new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int id) {
+				startActivity(new Intent(
+					MobileAppChallengeActivity.this,
+					PreferencesActivity.class));
+			    }
+			})
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int id) {
+			dialog.cancel();
+		    }
+		});
+	AlertDialog alert = builder.create();
     }
 
     @Override
@@ -66,7 +92,7 @@ public class MobileAppChallengeActivity extends Activity implements
 	switch (position) {
 	default:
 	    intent = new Intent(this, BasicListActivity.class);
-	    intent.putExtra("type", "artist");
+	    intent.putExtra("type", "list");
 	    intent.putExtra("query", "all");
 	    break;
 	}
@@ -77,6 +103,7 @@ public class MobileAppChallengeActivity extends Activity implements
     public boolean onCreateOptionsMenu(Menu menu) {
 	this.menu = menu;
 	new MenuInflater(getApplication()).inflate(R.menu.menu, this.menu);
+	menu.getItem(1).setEnabled(false);
 	return super.onCreateOptionsMenu(menu);
     }
 

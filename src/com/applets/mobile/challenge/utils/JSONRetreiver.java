@@ -31,7 +31,7 @@ public class JSONRetreiver extends AsyncTask<String, Integer, JSONObject> {
 	StringBuilder builder = new StringBuilder();
 	HttpClient client = new DefaultHttpClient();
 	HttpGet get = new HttpGet(params[0]);
-	JSONObject json = null;
+	JSONObject json = new JSONObject();
 	try {
 	    HttpResponse r = client.execute(get);
 	    StatusLine status = r.getStatusLine();
@@ -52,11 +52,12 @@ public class JSONRetreiver extends AsyncTask<String, Integer, JSONObject> {
 		} catch (JSONException e) {
 		    onCancelled();
 		    Log.e(JSONRetreiver.class.toString(),
-			    "Failed to parse data");
+			    "Failed to parse data :" + params[0]);
 		}
 	    } else {
 		onCancelled();
 		Log.e(JSONRetreiver.class.toString(), "Failed to download file");
+		
 	    }
 	} catch (ClientProtocolException e) {
 	    e.printStackTrace();
