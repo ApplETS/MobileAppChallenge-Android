@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_pref"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/menu_pref_lbl">
+    </item>
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="@string/menu_refresh">
+    </item>
+
+</menu>
