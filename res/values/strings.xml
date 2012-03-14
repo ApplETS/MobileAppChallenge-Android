@@ -12,4 +12,12 @@
         <item>Songs</item>
         <item>Playlist</item>
     </string-array>
-<string name="large_text">Large Text</string></resources>
+
+    <string name="large_text">Large Text</string>
+    <string name="preferences_cat_auth_title">Authentification</string>
+    <string name="preferences_cat_auth_username_lbl">Username</string>
+    <string name="preferences_cat_auth_password">Password</string>
+    <string name="menu_pref_lbl">Settings</string>
+    <string name="menu_refresh">Refresh</string>
+
+</resources>

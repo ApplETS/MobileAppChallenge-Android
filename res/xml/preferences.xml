@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/preferences_cat_auth_title" >
+        <EditTextPreference
+            android:key="password"
+            android:title="@string/preferences_cat_auth_username_lbl" />
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="username"
+            android:title="@string/preferences_cat_auth_password" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
