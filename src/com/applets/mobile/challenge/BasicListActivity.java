@@ -14,40 +14,41 @@ import com.applets.mobile.challenge.utils.IAsyncTaskListener;
 import com.applets.mobile.challenge.utils.JSONRetreiver;
 
 public class BasicListActivity extends ListActivity implements
-		IAsyncTaskListener {
+	IAsyncTaskListener {
 
-	private String query;
-	private String type;
-	// Handles the onPostExecute
-	private final Handler handler = new Handler();
+    private String query;
+    private String type;
+    // Handles the onPostExecute
+    private final Handler handler = new Handler();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.basic_list);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.basic_list);
 
-		Bundle bundle = getIntent().getExtras();
-		query = bundle.getString("query");
-		type = bundle.getString("type");
-		new JSONRetreiver(this).execute("http://highwizard.com:8080/" + type);
-	}
+	Bundle bundle = getIntent().getExtras();
+	query = bundle.getString("query");
+	type = bundle.getString("type");
+	new JSONRetreiver(this).execute("http://highwizard.com:8080/" + type);
+    }
 
-	@Override
-	public void onPostExecute(final JSONObject result) {
-		final Context ctx = this;
-		handler.post(new Runnable() {
+    @Override
+    public void onPostExecute(final JSONObject result) {
+	final Context ctx = this;
+	handler.post(new Runnable() {
 
-			@Override
-			public void run() {
-				setListAdapter(AdapterFactory.getInstance().getAdapter(type,
-						ctx, result));
-			}
-		});
-	}
+	    @Override
+	    public void run() {
+		setListAdapter(AdapterFactory.getInstance().getAdapter(type,
+			ctx, result));
+	    }
+	});
+    }
 
-	@Override
-	protected void onListItemClick(ListView listView, View view, int position, long id) {
-		super.onListItemClick(listView, view, position, id);
+    @Override
+    protected void onListItemClick(ListView listView, View view, int position,
+	    long id) {
+	super.onListItemClick(listView, view, position, id);
 
-	}
+    }
 }
