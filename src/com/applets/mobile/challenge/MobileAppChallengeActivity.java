@@ -34,19 +34,16 @@ public class MobileAppChallengeActivity extends Activity implements
 		case GridIconAdapter.ARTIST:
 			intent = new Intent(this, BasicListActivity.class);
 			intent.putExtra("type", "artist");
-			intent.putExtra("query", "all");
 			break;
 
 		case GridIconAdapter.ALBUM:
 			intent = new Intent(this, BasicListActivity.class);
 			intent.putExtra("type", "albums");
-			intent.putExtra("query", "all");
 			break;
 
 		default:
 			intent = new Intent(this, BasicListActivity.class);
 			intent.putExtra("type", "artist");
-			intent.putExtra("query", "all");
 			break;
 		}
 		startActivity(intent);

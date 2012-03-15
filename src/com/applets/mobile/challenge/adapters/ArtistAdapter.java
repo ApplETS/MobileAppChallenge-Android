@@ -89,7 +89,7 @@ public class ArtistAdapter extends BaseAdapter {
 		return v;
 	}
 
-	private String getLabel(int position) {
+	public String getLabel(int position) {
 		String lbl = "";
 		try {
 

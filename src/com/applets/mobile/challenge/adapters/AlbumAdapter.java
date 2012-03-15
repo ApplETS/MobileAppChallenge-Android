@@ -34,7 +34,6 @@ public class AlbumAdapter extends BaseAdapter {
 			}
 			return label;
 		}
-
 	}
 	
 	private Context ctx;
@@ -89,7 +88,7 @@ public class AlbumAdapter extends BaseAdapter {
 		return v;
 	}
 
-	private String getLabel(int position) {
+	public String getLabel(int position) {
 		String lbl = "";
 		try {
 
