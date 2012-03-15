@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, MobileAppChallengeActivity!</string>
+    <string name="hello">No Username, password or host is set, would you like to set one now ?</string>
     <string name="app_name">MobileAppChallenge</string>
     <string name="host">http://highwizard.com:8080/</string>
 
@@ -12,4 +12,13 @@
         <item>Songs</item>
         <item>Playlist</item>
     </string-array>
-<string name="large_text">Large Text</string></resources>
+
+    <string name="large_text">Large Text</string>
+    <string name="preferences_cat_host">Host</string>
+    <string name="preferences_cat_auth_title">Authentification</string>
+    <string name="preferences_cat_auth_username_lbl">Username</string>
+    <string name="preferences_cat_auth_password">Password</string>
+    <string name="menu_pref_lbl">Settings</string>
+    <string name="menu_refresh">Refresh</string>
+
+</resources>

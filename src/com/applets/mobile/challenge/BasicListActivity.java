@@ -17,17 +17,17 @@ import com.applets.mobile.challenge.utils.JSONRetreiver;
 
 //TODO on long click for songs
 public class BasicListActivity extends ListActivity implements
-		IAsyncTaskListener {
+	IAsyncTaskListener {
 
-	private String query;
-	private String type;
-	// Handles the onPostExecute
-	private final Handler handler = new Handler();
+    private String query;
+    private String type;
+    // Handles the onPostExecute
+    private final Handler handler = new Handler();
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.basic_list);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.basic_list);
 
 		Bundle bundle = getIntent().getExtras();
 		query = bundle.getString("query");
@@ -43,18 +43,18 @@ public class BasicListActivity extends ListActivity implements
 		
 	}
 
-	@Override
-	public void onPostExecute(final JSONObject result) {
-		final Context ctx = this;
-		handler.post(new Runnable() {
+    @Override
+    public void onPostExecute(final JSONObject result) {
+	final Context ctx = this;
+	handler.post(new Runnable() {
 
-			@Override
-			public void run() {
-				setListAdapter(AdapterFactory.getInstance().getAdapter(type,
-						ctx, result));
-			}
-		});
-	}
+	    @Override
+	    public void run() {
+		setListAdapter(AdapterFactory.getInstance().getAdapter(type,
+			ctx, result));
+	    }
+	});
+    }
 
 	@Override
 	protected void onListItemClick(ListView listView, View view, int position, long id) {
@@ -74,5 +74,5 @@ public class BasicListActivity extends ListActivity implements
 		}
 		
 		startActivity(intent);
-	}
+    }
 }
