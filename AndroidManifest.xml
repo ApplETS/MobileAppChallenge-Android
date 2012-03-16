@@ -24,6 +24,7 @@
         </activity>
         <activity android:name="PreferencesActivity" >
         </activity>
+        <activity android:name="MediaControllerActivity"></activity>
     </application>
 
 </manifest>
