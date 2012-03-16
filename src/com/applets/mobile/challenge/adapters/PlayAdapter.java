@@ -13,16 +13,15 @@ import android.widget.TextView;
 
 import com.applets.mobile.challenge.R;
 
-public class PlayAdapter   {
+public class PlayAdapter {
 
-	private Context ctx;
-	private JSONObject json;
+    private Context ctx;
+    private JSONObject json;
 
-	public PlayAdapter(Context ctx, JSONObject array) {
-		this.ctx = ctx;
-		this.json = array;
+    public PlayAdapter(Context ctx, JSONObject array) {
+	this.ctx = ctx;
+	this.json = array;
 
-		
-	}
+    }
 
 }

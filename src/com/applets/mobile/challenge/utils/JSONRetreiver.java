@@ -29,14 +29,6 @@ public class JSONRetreiver extends AsyncTask<String, Integer, JSONObject> {
 	public JSONRetreiver(final IAsyncTaskListener listener) {
 		this.listener = listener;
 	}
-<<<<<<< HEAD
-	Log.i("Challenge", get.getURI().toString());
-	JSONObject json = new JSONObject();
-	try {
-	    HttpResponse r = client.execute(get);
-	    StatusLine status = r.getStatusLine();
-=======
->>>>>>> dab674688c3b3efcae2286b1b8a37d84c7f8ea65
 
 	@Override
 	/**
