@@ -13,6 +13,11 @@
         <item>Playlist</item>
     </string-array>
 
+	    <string name="songLbl">Song : </string>
+    <string name="artistLbl">"Artist : "</string>
+    <string name="albumLbl">"Album : "</string>
+    <string name="timeSong">"Time : "</string>
+	
     <string name="large_text">Large Text</string>
     <string name="preferences_cat_host">Host</string>
     <string name="preferences_cat_auth_title">Authentification</string>
