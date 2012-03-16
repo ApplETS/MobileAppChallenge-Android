@@ -25,12 +25,7 @@ public final class AdapterFactory {
     }
 
     public ListAdapter getAdapter(String type, Context ctx, JSONObject array) {
-	if (type.equals("listalbums")) {
-	    return new ListAlbumAdapter(ctx, array);
-	} else if (type.equals("playlist")) {
-	    return new PlaylistAdapter(ctx, array);
-	}
-	return new ArtistAdapter(ctx, array);
+    	return new ArtistAdapter(ctx, array);
     }
 
 }
