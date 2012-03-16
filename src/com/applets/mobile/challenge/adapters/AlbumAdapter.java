@@ -21,18 +21,19 @@ public class AlbumAdapter extends BaseAdapter {
 	private View view;
 	private TextView label;
 	private ImageView image;
+	private TextView artist_label;
 
 	public AlbumWrapper(View view) {
 	    this.view = view;
 	}
 
-	public void setLabel(String string) {
-	    getLabel().setText(string);
+	public void setAlbumLabel(String string) {
+	    getAlbumLabel().setText(string);
 	}
 
-	private TextView getLabel() {
+	private TextView getAlbumLabel() {
 	    if (label == null) {
-		label = (TextView) view.findViewById(R.id.base_row_title);
+		label = (TextView) view.findViewById(R.id.album_row_title);
 	    }
 	    return label;
 	}
@@ -51,14 +52,18 @@ public class AlbumAdapter extends BaseAdapter {
 
     private Context ctx;
     private JSONObject json;
-    private JSONArray albums;
+    private JSONArray folders;
+    private JSONArray images;
+    private JSONArray files;
 
     public AlbumAdapter(Context ctx, JSONObject array) {
 	this.ctx = ctx;
 	this.json = array;
 
 	try {
-	    this.albums = json.getJSONArray("albums");
+	    this.folders = json.getJSONArray("folders");
+	    this.files = json.getJSONArray("files");
+	    this.images = json.getJSONArray("images");
 	} catch (JSONException e) {
 	    e.printStackTrace();
 	}
@@ -66,7 +71,7 @@ public class AlbumAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-	return albums.length();
+	return files.length() + images.length() + folders.length();
     }
 
     @Override
@@ -92,7 +97,7 @@ public class AlbumAdapter extends BaseAdapter {
 	} else {
 	    wrapper = (AlbumWrapper) v.getTag();
 	}
-	wrapper.setLabel(getLabel(position));
+	wrapper.setAlbumLabel(getLabel(position));
 	wrapper.setImage();
 	return v;
     }
@@ -101,8 +106,10 @@ public class AlbumAdapter extends BaseAdapter {
 	String lbl = "";
 	try {
 
-	    if (position < albums.length()) {
-		lbl = albums.getString(position);
+	    if (position < folders.length()) {
+		lbl = folders.getString(position);
+	    } else if (position < files.length()) {
+		lbl = files.getString(position);
 	    }
 	} catch (JSONException e) {
 	    e.printStackTrace();

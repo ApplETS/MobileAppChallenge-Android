@@ -44,12 +44,12 @@ public class BasicListActivity extends ListActivity implements
 	    path = "";
 	}
 
-	if (type.equals("songs")) {
+	if (type.equals("songs") || type.equals("albums")) {
 	    new JSONRetreiver(this).execute("http://highwizard.com:8080/list",
 		    query);
-	} else if (type.equals("albums")) {
-	    new JSONRetreiver(this).execute(
-		    "http://highwizard.com:8080/list/albums");
+	} else if (type.equals("listalbums")) {
+	    new JSONRetreiver(this)
+		    .execute("http://highwizard.com:8080/list/albums");
 	} else if (type.equals("artist")) {
 	    new JSONRetreiver(this).execute("http://highwizard.com:8080/list");
 	}
@@ -110,7 +110,8 @@ public class BasicListActivity extends ListActivity implements
     @Override
     protected void onListItemClick(ListView listView, View view, int position,
 	    long id) {
-	String text = (String) ((BaseAdapter) listView.getAdapter()).getItem(position);
+	String text = (String) ((BaseAdapter) listView.getAdapter())
+		.getItem(position);
 	Intent intent = null;
 	if (type.equals("artist")) {
 	    intent = new Intent(this, BasicListActivity.class);
@@ -127,7 +128,8 @@ public class BasicListActivity extends ListActivity implements
 		    MediaControllerActivity.class);
 	    intent.putExtra("file", path + text);
 	} else {
-
+	    intent = new Intent(this, BasicListActivity.class);
+	    intent.putExtra("type", "listalbums");
 	    return;
 	}
 

@@ -11,23 +11,24 @@ import com.applets.mobile.challenge.adapters.PlaylistAdapter;
 
 public final class AdapterFactory {
 
-	public static AdapterFactory instance;
+    public static AdapterFactory instance;
 
-	private AdapterFactory() {
+    private AdapterFactory() {
 
+    }
+
+    public static AdapterFactory getInstance() {
+	if (instance == null) {
+	    instance = new AdapterFactory();
 	}
+	return instance;
+    }
 
-	public static AdapterFactory getInstance() {
-		if (instance == null) {
-			instance = new AdapterFactory();
-		}
-		return instance;
-	}
     public ListAdapter getAdapter(String type, Context ctx, JSONObject array) {
-	if(type.equals("albums")){
+	if (type.equals("albums")) {
 	    return new AlbumAdapter(ctx, array);
-	}else if(type.equals("playlist")){
-	    return new PlaylistAdapter(ctx, array);   
+	} else if (type.equals("playlist")) {
+	    return new PlaylistAdapter(ctx, array);
 	}
 	return new ArtistAdapter(ctx, array);
     }
