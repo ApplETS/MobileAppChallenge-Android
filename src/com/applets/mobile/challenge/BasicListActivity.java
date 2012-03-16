@@ -52,6 +52,8 @@ public class BasicListActivity extends ListActivity implements
 		    .execute("http://highwizard.com:8080/list/albums");
 	} else if (type.equals("artist")) {
 	    new JSONRetreiver(this).execute("http://highwizard.com:8080/list");
+	} else if(type.equals("playlist")){
+	    new JSONRetreiver(this).execute("http://highwizard.com:8080/playlist");
 	}
 
 	this.getListView().setOnItemLongClickListener(new LongClickListener());
@@ -127,7 +129,11 @@ public class BasicListActivity extends ListActivity implements
 	    intent = new Intent((Context) activity,
 		    MediaControllerActivity.class);
 	    intent.putExtra("file", path + text);
-	} else {
+	} else if(type.equals("listalbums")){
+	    intent = new Intent(this, BasicListActivity.class);
+	    intent.putExtra("type", "songs");
+	    intent.putExtra("query", "folder_1=" + text + "/");
+	}else {
 	    intent = new Intent(this, BasicListActivity.class);
 	    intent.putExtra("type", "listalbums");
 	    return;

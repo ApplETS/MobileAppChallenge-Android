@@ -45,7 +45,7 @@ public class PlaylistAdapter extends BaseAdapter {
 	}
 
 	public void setImage() {
-	    getImage().setImageResource(R.drawable.cd);
+	    getImage().setImageResource(R.drawable.list);
 	}
     }
 
@@ -60,9 +60,7 @@ public class PlaylistAdapter extends BaseAdapter {
 	this.json = array;
 
 	try {
-	    this.folders = json.getJSONArray("folders");
-	    this.files = json.getJSONArray("files");
-	    this.images = json.getJSONArray("images");
+	    this.folders = json.getJSONArray("playlist");
 	} catch (JSONException e) {
 	    e.printStackTrace();
 	}
@@ -70,7 +68,7 @@ public class PlaylistAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-	return files.length() + images.length() + folders.length();
+	return folders.length();
     }
 
     @Override
@@ -107,10 +105,7 @@ public class PlaylistAdapter extends BaseAdapter {
 
 	    if (position < folders.length()) {
 		lbl = folders.getString(position);
-	    } else if (position < files.length()) {
-		lbl = files.getString(position);
-	    } else {
-		lbl = images.getString(position);
+		lbl.substring(0, lbl.indexOf(".xml"));
 	    }
 	} catch (JSONException e) {
 	    e.printStackTrace();

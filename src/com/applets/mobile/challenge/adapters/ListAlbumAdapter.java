@@ -140,7 +140,8 @@ public class ListAlbumAdapter extends BaseAdapter {
 	try {
 
 	    if (position < albums.length()) {
-		lbl = albums.getString(position);
+		JSONObject o = albums.getJSONObject(position);
+		lbl = o.getString("artist") + "/" + o.getString("album");
 	    }
 	} catch (JSONException e) {
 	    e.printStackTrace();
