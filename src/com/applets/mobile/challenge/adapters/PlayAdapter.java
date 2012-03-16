@@ -26,6 +26,8 @@ public class PlayAdapter {
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

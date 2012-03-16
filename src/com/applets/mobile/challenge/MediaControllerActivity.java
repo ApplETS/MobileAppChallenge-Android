@@ -48,16 +48,20 @@ public class MediaControllerActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.media_controller);
 
+		file = this.getIntent().getExtras().getString("file");
+
+		String[] info = file.split("/");
+		
 		// Info de la chanson
 		// TODO modifier les setText pour avoir les infos courants
 		songTextView = (TextView) findViewById(R.id.song_lbl);
-		songTextView.setText("titre chanson");
+		songTextView.setText(info[2]);
 
 		artistTextView = (TextView) findViewById(R.id.artist_lbl);
-		artistTextView.setText("nom artiste");
+		artistTextView.setText(info[0]);
 
 		albumTextView = (TextView) findViewById(R.id.album_lbl);
-		albumTextView.setText("titre album");
+		albumTextView.setText(info[1]);
 
 		timeSongTextView = (TextView) findViewById(R.id.timeSongtextView);
 		timeSongTextView.setText("00:00");
@@ -66,7 +70,6 @@ public class MediaControllerActivity extends Activity implements
 		albumImg = (ImageView) findViewById(R.id.albumImg);
 		// albumImg.setImageBitmap(bm);
 
-		file = this.getIntent().getExtras().getString("file");
 
 		// Button
 		previousBtn = (ImageButton) findViewById(R.id.previousBtn);
