@@ -15,13 +15,30 @@ import com.applets.mobile.challenge.R;
 
 public class PlayAdapter {
 
-    private Context ctx;
-    private JSONObject json;
+	private Context ctx;
+	private JSONObject json;
+	private boolean playing;
+	private String file;
 
-    public PlayAdapter(Context ctx, JSONObject array) {
-	this.ctx = ctx;
-	this.json = array;
+	public PlayAdapter(Context ctx, JSONObject array) {
+		this.ctx = ctx;
+		this.json = array;
+		
+		try {
+			String message = json.getString("message");
+			if (message.equals("null")) {
+				playing = false;
+			} else {
+				playing = true;
+				file = message;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
-    }
-
+	public boolean isPlaying() {
+		return playing;
+	}
+	
 }
