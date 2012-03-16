@@ -43,6 +43,19 @@ public class ArtistAdapter extends BaseAdapter {
     private JSONArray images;
     private JSONArray files;
 
+    public ArtistAdapter(Context ctx, JSONObject array) {
+	this.ctx = ctx;
+	this.json = array;
+
+	try {
+	    this.folders = json.getJSONArray("folders");
+	    this.files = json.getJSONArray("files");
+	    this.images = json.getJSONArray("images");
+	} catch (JSONException e) {
+	    e.printStackTrace();
+	}
+    }
+
     @Override
     public int getCount() {
 	return files.length() + images.length() + folders.length();
