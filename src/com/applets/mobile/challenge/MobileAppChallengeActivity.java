@@ -95,7 +95,6 @@ public class MobileAppChallengeActivity extends Activity implements
 	    intent.putExtra("type", "artist");
 	    break;
 	}
-	startActivity(intent);
     }
 
     @Override

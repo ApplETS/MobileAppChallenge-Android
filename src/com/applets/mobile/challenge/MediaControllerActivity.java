@@ -3,11 +3,12 @@ package com.applets.mobile.challenge;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.applets.mobile.challenge.adapters.PlayAdapter;
 import com.applets.mobile.challenge.utils.IAsyncTaskListener;
 import com.applets.mobile.challenge.utils.JSONRetreiver;
 
@@ -26,47 +27,37 @@ public class MediaControllerActivity extends Activity implements
 
     private IAsyncTaskListener activity = this;
 
+    private String file;
+
     private TextView songTextView;
     private TextView artistTextView;
     private TextView albumTextView;
     private TextView timeSongTextView;
     private ImageView albumImg;
-    private Button previousBtn;
+    private ImageButton previousBtn;
     private ImageButton rewBtn;
     private ImageButton playBtn;
     private ImageButton ffBtn;
     private ImageButton nextBtn;
     private SeekBar timeSeekBar;
-    private Timer timer;
-
-    private ImageButton pauseBtn;
-
-    private String artist;
-
-    private String album;
-
-    private String song;
+    private Timer timer = new Timer();
+    private final Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.media_controller);
 
-	final Bundle b = getIntent().getExtras();
-	artist = b.getString("artist");
-	album = b.getString("album");
-	song = b.getString("song");
-
 	// Info de la chanson
 	// TODO modifier les setText pour avoir les infos courants
 	songTextView = (TextView) findViewById(R.id.song_lbl);
-	songTextView.setText(song);
+	songTextView.setText("titre chanson");
 
 	artistTextView = (TextView) findViewById(R.id.artist_lbl);
-	artistTextView.setText(artist);
+	artistTextView.setText("nom artiste");
 
 	albumTextView = (TextView) findViewById(R.id.album_lbl);
-	albumTextView.setText(album);
+	albumTextView.setText("titre album");
 
 	timeSongTextView = (TextView) findViewById(R.id.timeSongtextView);
 	timeSongTextView.setText("00:00");
@@ -75,39 +66,30 @@ public class MediaControllerActivity extends Activity implements
 	albumImg = (ImageView) findViewById(R.id.albumImg);
 	// albumImg.setImageBitmap(bm);
 
+	file = this.getIntent().getExtras().getString("file");
+
 	// Button
-	// previousBtn = (Button) findViewById(R.id.previousBtn);
-	// previousBtn.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	// // TODO Auto-generated method stub
-	// // new
-	// // JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-	// // + "previous/");
-	//
-	// }
-	// });
+	previousBtn = (ImageButton) findViewById(R.id.previousBtn);
+	previousBtn.setOnClickListener(new OnClickListener() {
+
+	    @Override
+	    public void onClick(View v) {
+		// TODO Auto-generated method stub
+		// new
+		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
+		// + "previous/");
+
+	    }
+	});
 
 	rewBtn = (ImageButton) findViewById(R.id.rewBtn);
 	rewBtn.setOnClickListener(new OnClickListener() {
 
 	    @Override
 	    public void onClick(View v) {
-		new JSONRetreiver(new IAsyncTaskListener() {
-
-		    @Override
-		    public void onPostExecute(JSONObject result) {
-			try {
-			    String time = result.getString("time");
-			    timeSongTextView.setText(time);
-			} catch (JSONException e) {
-			    e.printStackTrace();
-			}
-
-		    }
-		}).execute("http://highwizard.com:8080/",
-			"player/seek/?time=-10");
+		// new
+		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
+		// + "player/");
 	    }
 	});
 
@@ -116,46 +98,25 @@ public class MediaControllerActivity extends Activity implements
 
 	    @Override
 	    public void onClick(View v) {
-		new JSONRetreiver(new IAsyncTaskListener() {
 
-		    @Override
-		    public void onPostExecute(JSONObject result) {
-			try {
-			    String s = result.getString("playing");
-			    String t = result.getString("time");
-			    timeSeekBar.setMax(100 * Integer.parseInt(t));
-			    startTimer();
-			    pauseBtn.setEnabled(true);
-			    playBtn.setEnabled(false);
-			} catch (JSONException e) {
-			    e.printStackTrace();
-			}
-		    }
-		}).execute("http://highwizard.com:8080/", "player/song/?file="
-			+ artist + "/" + album + "/" + song);
-	    }
-	});
+		play();
 
-	pauseBtn = (ImageButton) findViewById(R.id.pauseBtn);
-	pauseBtn.setOnClickListener(new OnClickListener() {
+		// get player state
+		// new JSONRetreiver(activity)
+		// .execute("http://highwizard.com:8080/player/");
 
-	    @Override
-	    public void onClick(View v) {
-		// TODO Auto-generated method stub
-		new JSONRetreiver(new IAsyncTaskListener() {
+		// new
+		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
+		// + "stop/");
 
-		    @Override
-		    public void onPostExecute(JSONObject result) {
-			try {
-			    String s = result.getString("isPlaying");
-			} catch (JSONException e) {
-			    e.printStackTrace();
-			}
-			pauseBtn.setEnabled(false);
-			playBtn.setEnabled(false);
-			timer.cancel();
-		    }
-		}).execute("http://highwizard.com:8080/", "player/pause/");
+		// joue le fichier dŽfinie par le path si il existe
+		// new
+		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
+		// + "/play/song/?file=" + file);
+
+		// si play --> partir le timer
+		// si stop --> arreter le timer
+
 	    }
 	});
 
@@ -164,19 +125,10 @@ public class MediaControllerActivity extends Activity implements
 
 	    @Override
 	    public void onClick(View v) {
-		new JSONRetreiver(new IAsyncTaskListener() {
-
-		    @Override
-		    public void onPostExecute(JSONObject result) {
-			try {
-			    String time = result.getString("time");
-			    timeSongTextView.setText(time);
-			} catch (JSONException e) {
-			    e.printStackTrace();
-			}
-		    }
-		}).execute("http://highwizard.com:8080/",
-			"player/seek/?time=10");
+		// TODO Auto-generated method stub
+		// new
+		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
+		// + "fastFoward/");
 	    }
 	});
 
@@ -185,32 +137,16 @@ public class MediaControllerActivity extends Activity implements
 
 	    @Override
 	    public void onClick(View v) {
-		new JSONRetreiver(new IAsyncTaskListener() {
-
-		    @Override
-		    public void onPostExecute(JSONObject result) {
-			try {
-			    String playing = result.getString("isPlaying");
-			    if (playing.equals("false")) {
-				playBtn.setEnabled(true);
-				pauseBtn.setEnabled(false);
-				Toast.makeText(getApplication(),
-					"Nothing to play.", Toast.LENGTH_LONG)
-					.show();
-			    }
-			    timer.cancel();
-			    startTimer();
-			} catch (JSONException e) {
-			    e.printStackTrace();
-			}
-
-		    }
-		}).execute("http://highwizard.com:8080/", "player/next/");
+		new JSONRetreiver(activity)
+			.execute("http://highwizard.com:8080/player/" + "next");
 	    }
 	});
 
 	// Time
 	timeSeekBar = (SeekBar) findViewById(R.id.timeSeekBar);
+	// new JSONRetreiver(activity).execute("http://highwizard.com:8080/" +
+	// "play/");
+	timeSeekBar.setMax(100/* temps de la chanson */);
 	timeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 	    @Override
@@ -228,20 +164,11 @@ public class MediaControllerActivity extends Activity implements
 	    @Override
 	    public void onProgressChanged(SeekBar seekBar, int progress,
 		    boolean fromUser) {
+		// TODO envoyer nouvelle position
 
-		new JSONRetreiver(new IAsyncTaskListener() {
-
-		    @Override
-		    public void onPostExecute(JSONObject result) {
-		    }
-		}).execute("http://highwizard.com:8080/", "seek/?time="
-			+ progress);
 	    }
 	});
 
-    }
-
-    public void startTimer() {
 	// Reference :
 	// http://www.anddev.org/video-tut_-_playing_mediamp3_on_the_emulator-t156-s60.html
 	timer.schedule(new TimerTask() {
@@ -276,16 +203,34 @@ public class MediaControllerActivity extends Activity implements
 			str = min + ":" + sec;
 		}
 
-		timeSongTextView.setText(str);
+		final String temp = str;
+
+		handler.post(new Runnable() {
+		    @Override
+		    public void run() {
+			timeSongTextView.setText(temp);
+		    }
+		});
 
 	    }
 	}, 1000, 1000);
     }
 
-    @Override
-    public void onPostExecute(JSONObject result) {
-	// TODO Auto-generated method stub
+    private void play() {
+	new JSONRetreiver(activity).execute("http://highwizard.com:8080"
+		+ "/player/song", "file=" + file);
+	updatePlayButton(true);
+    }
 
+    @Override
+    public void onPostExecute(final JSONObject result) {
+	final Context ctx = this;
+	handler.post(new Runnable() {
+	    @Override
+	    public void run() {
+		new PlayAdapter(ctx, result);
+	    }
+	});
     }
 
     private void updatePlayButton(boolean playing) {

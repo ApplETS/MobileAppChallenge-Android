@@ -3,6 +3,7 @@ package com.applets.mobile.challenge;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,22 +13,21 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.applets.mobile.challenge.adapters.ArtistAdapter;
 import com.applets.mobile.challenge.utils.AdapterFactory;
 import com.applets.mobile.challenge.utils.IAsyncTaskListener;
 import com.applets.mobile.challenge.utils.JSONRetreiver;
 
 public class BasicListActivity extends ListActivity implements
 	IAsyncTaskListener {
-
     private String query;
     private String type;
+    private String path = "";
     // Handles the onPostExecute
     private final Handler handler = new Handler();
-    private String artist;
-    private String album;
+    private IAsyncTaskListener activity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +38,18 @@ public class BasicListActivity extends ListActivity implements
 	query = bundle.getString("query");
 	type = bundle.getString("type");
 
-	artist = bundle.getString("artist");
-	album = bundle.getString("album");
+	path = bundle.getString("path");
+
+	if (path == null) {
+	    path = "";
+	}
 
 	if (type.equals("songs")) {
 	    new JSONRetreiver(this).execute("http://highwizard.com:8080/list",
 		    query);
 	} else if (type.equals("albums")) {
-	    new JSONRetreiver(this)
-		    .execute("http://highwizard.com:8080/list/albums");
+	    new JSONRetreiver(this).execute(
+		    "http://highwizard.com:8080/list/albums", query);
 	} else if (type.equals("artist")) {
 	    new JSONRetreiver(this).execute("http://highwizard.com:8080/list");
 	}
@@ -58,8 +61,8 @@ public class BasicListActivity extends ListActivity implements
     private class LongClickListener implements OnItemLongClickListener {
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> adapterViews, View view,
-		int position, long id) {
+	public boolean onItemLongClick(final AdapterView<?> adapterViews,
+		View view, final int position, long id) {
 
 	    if (type.equals("songs")) {
 		final CharSequence[] items = { "Add song to playlist",
@@ -74,6 +77,14 @@ public class BasicListActivity extends ListActivity implements
 
 			} else if (item == 1) {
 
+			    String text = ((ArtistAdapter) adapterViews
+				    .getAdapter()).getLabel(position);
+
+			    Intent intent = null;
+			    intent = new Intent((Context) activity,
+				    MediaControllerActivity.class);
+			    intent.putExtra("file", text);
+			    startActivity(intent);
 			}
 		    }
 		});
@@ -88,7 +99,6 @@ public class BasicListActivity extends ListActivity implements
     public void onPostExecute(final JSONObject result) {
 	final Context ctx = this;
 	handler.post(new Runnable() {
-
 	    @Override
 	    public void run() {
 		setListAdapter(AdapterFactory.getInstance().getAdapter(type,
@@ -100,29 +110,26 @@ public class BasicListActivity extends ListActivity implements
     @Override
     protected void onListItemClick(ListView listView, View view, int position,
 	    long id) {
-	String text = (String) ((BaseAdapter) listView.getAdapter())
-		.getItem(position);
+	String text = ((ArtistAdapter) listView.getAdapter())
+		.getLabel(position);
 	Intent intent = null;
 	if (type.equals("artist")) {
 	    intent = new Intent(this, BasicListActivity.class);
 	    intent.putExtra("type", "albums");
 	    intent.putExtra("query", "folder_1=" + text + "/");
-	    intent.putExtra("artist", text);
+	    intent.putExtra("path", path + text + "/");
 	} else if (type.equals("albums")) {
 	    intent = new Intent(this, BasicListActivity.class);
 	    intent.putExtra("type", "songs");
-	    if (query != null) {
-		intent.putExtra("query", query + text);
-	    } else {
-		intent.putExtra("query", text);
-	    }
-	    intent.putExtra("artist", artist);
-	    intent.putExtra("album", text);
+	    intent.putExtra("query", query + text);
+	    intent.putExtra("path", path + text + "/");
+	} else if (type.equals("songs")) {
+	    intent = new Intent((Context) activity,
+		    MediaControllerActivity.class);
+	    intent.putExtra("file", path + text);
 	} else {
-	    intent = new Intent(this, MediaControllerActivity.class);
-	    intent.putExtra("artist", artist);
-	    intent.putExtra("album", album);
-	    intent.putExtra("song", text);
+
+	    return;
 	}
 
 	startActivity(intent);
