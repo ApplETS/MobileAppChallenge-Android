@@ -34,13 +34,13 @@ public class MediaControllerActivity extends Activity implements
 	private TextView albumTextView;
 	private TextView timeSongTextView;
 	private ImageView albumImg;
-	private Button previousBtn;
-	private Button rewBtn;
+	private ImageButton previousBtn;
+	private ImageButton rewBtn;
 	private ImageButton playBtn;
-	private Button ffBtn;
-	private Button nextBtn;
+	private ImageButton ffBtn;
+	private ImageButton nextBtn;
 	private SeekBar timeSeekBar;
-	private Timer timer;
+	private Timer timer = new Timer();
 	private final Handler handler = new Handler();
 
 	@Override
@@ -66,13 +66,10 @@ public class MediaControllerActivity extends Activity implements
 		albumImg = (ImageView) findViewById(R.id.albumImg);
 		// albumImg.setImageBitmap(bm);
 
-		file = (String) this.getIntent().getExtras().get("file");
-
-		new JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-				+ "/play/song/", "file=" + file);
+		file = this.getIntent().getExtras().getString("file");
 
 		// Button
-		previousBtn = (Button) findViewById(R.id.previousBtn);
+		previousBtn = (ImageButton) findViewById(R.id.previousBtn);
 		previousBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -85,7 +82,7 @@ public class MediaControllerActivity extends Activity implements
 			}
 		});
 
-		rewBtn = (Button) findViewById(R.id.rewBtn);
+		rewBtn = (ImageButton) findViewById(R.id.rewBtn);
 		rewBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -102,9 +99,11 @@ public class MediaControllerActivity extends Activity implements
 			@Override
 			public void onClick(View v) {
 
+				play();
+				
 				// get player state
-				new JSONRetreiver(activity)
-						.execute("http://highwizard.com:8080/player/");
+				// new JSONRetreiver(activity)
+				//		.execute("http://highwizard.com:8080/player/");
 
 				// new
 				// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
@@ -121,7 +120,7 @@ public class MediaControllerActivity extends Activity implements
 			}
 		});
 
-		ffBtn = (Button) findViewById(R.id.ffBtn);
+		ffBtn = (ImageButton) findViewById(R.id.ffBtn);
 		ffBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -133,15 +132,13 @@ public class MediaControllerActivity extends Activity implements
 			}
 		});
 
-		nextBtn = (Button) findViewById(R.id.nextBtn);
+		nextBtn = (ImageButton) findViewById(R.id.nextBtn);
 		nextBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				// new
-				// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-				// + "next/");
+				 new
+				 JSONRetreiver(activity).execute("http://highwizard.com:8080/player/" + "next");
 			}
 		});
 
@@ -205,13 +202,27 @@ public class MediaControllerActivity extends Activity implements
 					else
 						str = min + ":" + sec;
 				}
-
-				timeSongTextView.setText(str);
+				
+				final String temp = str;
+				
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						timeSongTextView.setText(temp);
+					}
+				});
+				
 
 			}
 		}, 1000, 1000);
 	}
 
+	private void play() {
+		new JSONRetreiver(activity).execute("http://highwizard.com:8080"
+				+ "/player/song", "file=" + file);
+		updatePlayButton(true);
+	}
+	
 	@Override
 	public void onPostExecute(final JSONObject result) {
 		final Context ctx = this;

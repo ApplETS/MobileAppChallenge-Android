@@ -1,7 +1,5 @@
 package com.applets.mobile.challenge;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
@@ -26,6 +24,7 @@ public class BasicListActivity extends ListActivity implements
 
 	private String query;
 	private String type;
+	private String path = "";
 	// Handles the onPostExecute
 	private final Handler handler = new Handler();
 	private IAsyncTaskListener activity = this;
@@ -39,6 +38,12 @@ public class BasicListActivity extends ListActivity implements
 		query = bundle.getString("query");
 		type = bundle.getString("type");
 
+		path = bundle.getString("path");
+
+		if (path == null) {
+			path = "";
+		}
+		
 		if (type.equals("songs")) {
 			new JSONRetreiver(this).execute("http://highwizard.com:8080/list",
 					query);
@@ -112,14 +117,15 @@ public class BasicListActivity extends ListActivity implements
 			intent = new Intent(this, BasicListActivity.class);
 			intent.putExtra("type", "albums");
 			intent.putExtra("query", "folder_1=" + text + "/");
+			intent.putExtra("path", path + text + "/");
 		} else if (type.equals("albums")) {
 			intent = new Intent(this, BasicListActivity.class);
 			intent.putExtra("type", "songs");
 			intent.putExtra("query", query + text);
+			intent.putExtra("path", path + text + "/");
 		} else if (type.equals("songs")) {
 			intent = new Intent((Context) activity, MediaControllerActivity.class);
-			intent.putExtra("file", text);
-			startActivity(intent);
+			intent.putExtra("file", path + text);
 		}
 		else {
 			
