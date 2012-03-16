@@ -3,7 +3,6 @@ package com.applets.mobile.challenge;
 import org.json.JSONObject;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +12,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.applets.mobile.challenge.adapters.ArtistAdapter;
@@ -49,7 +49,7 @@ public class BasicListActivity extends ListActivity implements
 		    query);
 	} else if (type.equals("albums")) {
 	    new JSONRetreiver(this).execute(
-		    "http://highwizard.com:8080/list/albums", query);
+		    "http://highwizard.com:8080/list/albums");
 	} else if (type.equals("artist")) {
 	    new JSONRetreiver(this).execute("http://highwizard.com:8080/list");
 	}
@@ -110,8 +110,7 @@ public class BasicListActivity extends ListActivity implements
     @Override
     protected void onListItemClick(ListView listView, View view, int position,
 	    long id) {
-	String text = ((ArtistAdapter) listView.getAdapter())
-		.getLabel(position);
+	String text = (String) ((BaseAdapter) listView.getAdapter()).getItem(position);
 	Intent intent = null;
 	if (type.equals("artist")) {
 	    intent = new Intent(this, BasicListActivity.class);
