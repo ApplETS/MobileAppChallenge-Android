@@ -9,20 +9,20 @@ import com.applets.mobile.challenge.adapters.ArtistAdapter;
 
 public final class AdapterFactory {
 
-	public static AdapterFactory instance;
+    public static AdapterFactory instance;
 
-	private AdapterFactory() {
+    private AdapterFactory() {
 
+    }
+
+    public static AdapterFactory getInstance() {
+	if (instance == null) {
+	    instance = new AdapterFactory();
 	}
+	return instance;
+    }
 
-	public static AdapterFactory getInstance() {
-		if (instance == null) {
-			instance = new AdapterFactory();
-		}
-		return instance;
-	}
-
-	public ListAdapter getAdapter(String type, Context ctx, JSONObject array) {
-		return new ArtistAdapter(ctx, array);
-	}
+    public ListAdapter getAdapter(String type, Context ctx, JSONObject array) {
+	return new ArtistAdapter(ctx, array);
+    }
 }

@@ -30,31 +30,32 @@ public class JSONRetreiver extends AsyncTask<String, Integer, JSONObject> {
 	this.listener = listener;
     }
 
-	@Override
-	/**
-	 * params[1] passer les valeur get comme ceci : key=value; key2=value2
-	 * TODO code for post
-	 */
-	protected JSONObject doInBackground(String... params) {
-		onPreExecute();
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet get = new HttpGet(params[0]);
-		if (params.length > 1) {
-			List<NameValuePair> getParams = new ArrayList<NameValuePair>();
-			String[] strParams = params[1].split(";");
-			for (int i = 0 ; i < strParams.length ; i++) {
-				String[] tempKeyValue = strParams[i].split("=");
-				getParams.add(new BasicNameValuePair(tempKeyValue[0], tempKeyValue[1]));
-			}
-			String paramString = URLEncodedUtils.format(getParams, "utf-8");
-			get = new HttpGet(params[0] + "?" + paramString);
-		}
-		Log.i("Challenge", get.getURI().toString());
-		JSONObject json = null;
-		try {
-			HttpResponse r = client.execute(get);
-			StatusLine status = r.getStatusLine();
+    @Override
+    /**
+     * params[1] passer les valeur get comme ceci : key=value; key2=value2
+     * TODO code for post
+     */
+    protected JSONObject doInBackground(String... params) {
+	onPreExecute();
+	StringBuilder builder = new StringBuilder();
+	HttpClient client = new DefaultHttpClient();
+	HttpGet get = new HttpGet(params[0]);
+	if (params.length > 1) {
+	    List<NameValuePair> getParams = new ArrayList<NameValuePair>();
+	    String[] strParams = params[1].split(";");
+	    for (int i = 0; i < strParams.length; i++) {
+		String[] tempKeyValue = strParams[i].split("=");
+		getParams.add(new BasicNameValuePair(tempKeyValue[0],
+			tempKeyValue[1]));
+	    }
+	    String paramString = URLEncodedUtils.format(getParams, "utf-8");
+	    get = new HttpGet(params[0] + "?" + paramString);
+	}
+	Log.i("Challenge", get.getURI().toString());
+	JSONObject json = null;
+	try {
+	    HttpResponse r = client.execute(get);
+	    StatusLine status = r.getStatusLine();
 
 	    if (status.getStatusCode() == 200) {
 		HttpEntity entity = r.getEntity();
