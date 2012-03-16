@@ -49,7 +49,7 @@ public class GridIconAdapter extends BaseAdapter {
     // list of button labels
     private String[] labels;
     private static final int[] icons = new int[] { R.drawable.mic,
-	    R.drawable.cd, R.drawable.music, R.drawable.music, R.drawable.list };
+	    R.drawable.cd, R.drawable.list };
     public static final int ARTIST = 0;
     public static final int ALBUM = 1;
     private Context ctx;

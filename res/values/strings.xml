@@ -8,8 +8,6 @@
     <string-array name="icon_labels">
         <item>Artist</item>
         <item>Albums</item>
-        <item>Genre</item>
-        <item>Songs</item>
         <item>Playlist</item>
     </string-array>
 

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.applets.mobile.challenge.R;
 
-public class AlbumAdapter extends BaseAdapter {
+public class ListAlbumAdapter extends BaseAdapter {
 
     private class AlbumWrapper {
 
@@ -31,11 +31,23 @@ public class AlbumAdapter extends BaseAdapter {
 	    getAlbumLabel().setText(string);
 	}
 
+	public void setArtistLabel(String string) {
+	    getArtistLabel().setText(string);
+	}
+
 	private TextView getAlbumLabel() {
 	    if (label == null) {
 		label = (TextView) view.findViewById(R.id.album_row_title);
 	    }
 	    return label;
+	}
+
+	private TextView getArtistLabel() {
+	    if (artist_label == null) {
+		artist_label = (TextView) view
+			.findViewById(R.id.album_artist_lbl);
+	    }
+	    return artist_label;
 	}
 
 	private ImageView getImage() {
@@ -52,18 +64,14 @@ public class AlbumAdapter extends BaseAdapter {
 
     private Context ctx;
     private JSONObject json;
-    private JSONArray folders;
-    private JSONArray images;
-    private JSONArray files;
+    private JSONArray albums;
 
-    public AlbumAdapter(Context ctx, JSONObject array) {
+    public ListAlbumAdapter(Context ctx, JSONObject array) {
 	this.ctx = ctx;
 	this.json = array;
 
 	try {
-	    this.folders = json.getJSONArray("folders");
-	    this.files = json.getJSONArray("files");
-	    this.images = json.getJSONArray("images");
+	    this.albums = json.getJSONArray("albums");
 	} catch (JSONException e) {
 	    e.printStackTrace();
 	}
@@ -71,7 +79,7 @@ public class AlbumAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-	return files.length() + images.length() + folders.length();
+	return albums.length();
     }
 
     @Override
@@ -91,25 +99,48 @@ public class AlbumAdapter extends BaseAdapter {
 	View v = convertView;
 	if (v == null) {
 	    // inflate the xml row layout from context
-	    v = LayoutInflater.from(ctx).inflate(R.layout.basic_row, null);
+	    v = LayoutInflater.from(ctx).inflate(R.layout.album_row, null);
 	    wrapper = new AlbumWrapper(v);
 	    v.setTag(wrapper);
 	} else {
 	    wrapper = (AlbumWrapper) v.getTag();
 	}
-	wrapper.setAlbumLabel(getLabel(position));
+	wrapper.setAlbumLabel(getAlbumLabel(position));
+	wrapper.setArtistLabel(getArtistLabel(position));
 	wrapper.setImage();
 	return v;
+    }
+
+    private String getAlbumLabel(int position) {
+	String album = "";
+	try {
+	    JSONObject o = albums.getJSONObject(position);
+	    album = o.getString("album");
+	} catch (JSONException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return album;
+    }
+
+    private String getArtistLabel(int position) {
+	String artist = "";
+	try {
+	    JSONObject o = albums.getJSONObject(position);
+	    artist = o.getString("artist");
+	} catch (JSONException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return artist;
     }
 
     public String getLabel(int position) {
 	String lbl = "";
 	try {
 
-	    if (position < folders.length()) {
-		lbl = folders.getString(position);
-	    } else if (position < files.length()) {
-		lbl = files.getString(position);
+	    if (position < albums.length()) {
+		lbl = albums.getString(position);
 	    }
 	} catch (JSONException e) {
 	    e.printStackTrace();

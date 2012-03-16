@@ -8,8 +8,7 @@
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:horizontalSpacing="10dip"
-        android:numColumns="3" android:verticalSpacing="10dip">
+        android:numColumns="3" android:verticalSpacing="20dip" android:horizontalSpacing="20dip">
 
     </GridView>
 

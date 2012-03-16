@@ -84,11 +84,11 @@ public class MobileAppChallengeActivity extends Activity implements
 	switch (position) {
 	case 1:
 	    intent = new Intent(this, BasicListActivity.class);
-	    intent.putExtra("type", "albums");
+	    intent.putExtra("type", "listalbums");
 	    break;
 	case 2:
 	    intent = new Intent(this, BasicListActivity.class);
-	    intent.putExtra("type", "albums");
+	    intent.putExtra("type", "playlist");
 	    break;
 	default:
 	    intent = new Intent(this, BasicListActivity.class);
