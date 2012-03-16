@@ -52,7 +52,7 @@ public class JSONRetreiver extends AsyncTask<String, Integer, JSONObject> {
 	    get = new HttpGet(params[0] + "?" + paramString);
 	}
 	Log.i("Challenge", get.getURI().toString());
-	JSONObject json = null;
+	JSONObject json = new JSONObject();
 	try {
 	    HttpResponse r = client.execute(get);
 	    StatusLine status = r.getStatusLine();

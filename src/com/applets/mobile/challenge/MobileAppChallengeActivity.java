@@ -82,6 +82,14 @@ public class MobileAppChallengeActivity extends Activity implements
 	    long id) {
 	Intent intent = null;
 	switch (position) {
+	case 1:
+	    intent = new Intent(this, BasicListActivity.class);
+	    intent.putExtra("type", "albums");
+	    break;
+	case 2:
+	    intent = new Intent(this, BasicListActivity.class);
+	    intent.putExtra("type", "albums");
+	    break;
 	default:
 	    intent = new Intent(this, BasicListActivity.class);
 	    intent.putExtra("type", "artist");

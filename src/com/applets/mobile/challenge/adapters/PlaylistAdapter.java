@@ -9,18 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.applets.mobile.challenge.R;
 
-public class ArtistAdapter extends BaseAdapter {
+public class PlaylistAdapter extends BaseAdapter {
 
-    private class ArtistWrapper {
+    private class PlaylistWrapper {
 
 	private View view;
 	private TextView label;
+	private ImageView image;
 
-	public ArtistWrapper(View view) {
+	public PlaylistWrapper(View view) {
 	    this.view = view;
 	}
 
@@ -35,6 +37,16 @@ public class ArtistAdapter extends BaseAdapter {
 	    return label;
 	}
 
+	private ImageView getImage() {
+	    if (image == null) {
+		image = (ImageView) view.findViewById(R.id.base_row_image);
+	    }
+	    return image;
+	}
+
+	public void setImage() {
+	    getImage().setImageResource(R.drawable.cd);
+	}
     }
 
     private Context ctx;
@@ -43,7 +55,7 @@ public class ArtistAdapter extends BaseAdapter {
     private JSONArray images;
     private JSONArray files;
 
-    public ArtistAdapter(Context ctx, JSONObject array) {
+    public PlaylistAdapter(Context ctx, JSONObject array) {
 	this.ctx = ctx;
 	this.json = array;
 
@@ -63,7 +75,6 @@ public class ArtistAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int arg0) {
-	// TODO Auto-generated method stub
 	return getLabel(arg0);
     }
 
@@ -75,17 +86,18 @@ public class ArtistAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-	ArtistWrapper wrapper;
+	PlaylistWrapper wrapper;
 	View v = convertView;
 	if (v == null) {
 	    // inflate the xml row layout from context
 	    v = LayoutInflater.from(ctx).inflate(R.layout.basic_row, null);
-	    wrapper = new ArtistWrapper(v);
+	    wrapper = new PlaylistWrapper(v);
 	    v.setTag(wrapper);
 	} else {
-	    wrapper = (ArtistWrapper) v.getTag();
+	    wrapper = (PlaylistWrapper) v.getTag();
 	}
 	wrapper.setLabel(getLabel(position));
+	wrapper.setImage();
 	return v;
     }
 

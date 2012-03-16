@@ -3,6 +3,7 @@ package com.applets.mobile.challenge;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.applets.mobile.challenge.utils.IAsyncTaskListener;
 import com.applets.mobile.challenge.utils.JSONRetreiver;
@@ -30,28 +32,41 @@ public class MediaControllerActivity extends Activity implements
     private TextView timeSongTextView;
     private ImageView albumImg;
     private Button previousBtn;
-    private Button rewBtn;
+    private ImageButton rewBtn;
     private ImageButton playBtn;
-    private Button ffBtn;
-    private Button nextBtn;
+    private ImageButton ffBtn;
+    private ImageButton nextBtn;
     private SeekBar timeSeekBar;
     private Timer timer;
+
+    private ImageButton pauseBtn;
+
+    private String artist;
+
+    private String album;
+
+    private String song;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.media_controller);
 
+	final Bundle b = getIntent().getExtras();
+	artist = b.getString("artist");
+	album = b.getString("album");
+	song = b.getString("song");
+
 	// Info de la chanson
 	// TODO modifier les setText pour avoir les infos courants
-	songTextView = (TextView) findViewById(R.id.songTextView);
-	songTextView.setText("titre chanson");
+	songTextView = (TextView) findViewById(R.id.song_lbl);
+	songTextView.setText(song);
 
-	artistTextView = (TextView) findViewById(R.id.songTextView);
-	artistTextView.setText("nom artiste");
+	artistTextView = (TextView) findViewById(R.id.artist_lbl);
+	artistTextView.setText(artist);
 
-	albumTextView = (TextView) findViewById(R.id.songTextView);
-	albumTextView.setText("titre album");
+	albumTextView = (TextView) findViewById(R.id.album_lbl);
+	albumTextView.setText(album);
 
 	timeSongTextView = (TextView) findViewById(R.id.timeSongtextView);
 	timeSongTextView.setText("00:00");
@@ -61,28 +76,38 @@ public class MediaControllerActivity extends Activity implements
 	// albumImg.setImageBitmap(bm);
 
 	// Button
-	previousBtn = (Button) findViewById(R.id.previousBtn);
-	previousBtn.setOnClickListener(new OnClickListener() {
+	// previousBtn = (Button) findViewById(R.id.previousBtn);
+	// previousBtn.setOnClickListener(new OnClickListener() {
+	//
+	// @Override
+	// public void onClick(View v) {
+	// // TODO Auto-generated method stub
+	// // new
+	// // JSONRetreiver(activity).execute("http://highwizard.com:8080/"
+	// // + "previous/");
+	//
+	// }
+	// });
 
-	    @Override
-	    public void onClick(View v) {
-		// TODO Auto-generated method stub
-		// new
-		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-		// + "previous/");
-
-	    }
-	});
-
-	rewBtn = (Button) findViewById(R.id.rewBtn);
+	rewBtn = (ImageButton) findViewById(R.id.rewBtn);
 	rewBtn.setOnClickListener(new OnClickListener() {
 
 	    @Override
 	    public void onClick(View v) {
-		// TODO Auto-generated method stub
-		// new
-		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-		// + "reculer/");
+		new JSONRetreiver(new IAsyncTaskListener() {
+
+		    @Override
+		    public void onPostExecute(JSONObject result) {
+			try {
+			    String time = result.getString("time");
+			    timeSongTextView.setText(time);
+			} catch (JSONException e) {
+			    e.printStackTrace();
+			}
+
+		    }
+		}).execute("http://highwizard.com:8080/",
+			"player/seek/?time=-10");
 	    }
 	});
 
@@ -91,55 +116,101 @@ public class MediaControllerActivity extends Activity implements
 
 	    @Override
 	    public void onClick(View v) {
-		// TODO Auto-generated method stub
-		// donne l'Žtat du player
-		new JSONRetreiver(activity)
-			.execute("http://highwizard.com:8080/" + "play/");
+		new JSONRetreiver(new IAsyncTaskListener() {
 
-		// new
-		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-		// + "stop/");
-
-		// joue le fichier dŽfinie par le path si il existe
-		// new
-		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-		// + "/play/song/?file=(PATH)");
-
-		// si play --> partir le timer
-		// si stop --> arreter le timer
-
+		    @Override
+		    public void onPostExecute(JSONObject result) {
+			try {
+			    String s = result.getString("playing");
+			    String t = result.getString("time");
+			    timeSeekBar.setMax(100 * Integer.parseInt(t));
+			    startTimer();
+			    pauseBtn.setEnabled(true);
+			    playBtn.setEnabled(false);
+			} catch (JSONException e) {
+			    e.printStackTrace();
+			}
+		    }
+		}).execute("http://highwizard.com:8080/", "player/song/?file="
+			+ artist + "/" + album + "/" + song);
 	    }
 	});
 
-	ffBtn = (Button) findViewById(R.id.ffBtn);
+	pauseBtn = (ImageButton) findViewById(R.id.pauseBtn);
+	pauseBtn.setOnClickListener(new OnClickListener() {
+
+	    @Override
+	    public void onClick(View v) {
+		// TODO Auto-generated method stub
+		new JSONRetreiver(new IAsyncTaskListener() {
+
+		    @Override
+		    public void onPostExecute(JSONObject result) {
+			try {
+			    String s = result.getString("isPlaying");
+			} catch (JSONException e) {
+			    e.printStackTrace();
+			}
+			pauseBtn.setEnabled(false);
+			playBtn.setEnabled(false);
+			timer.cancel();
+		    }
+		}).execute("http://highwizard.com:8080/", "player/pause/");
+	    }
+	});
+
+	ffBtn = (ImageButton) findViewById(R.id.ffBtn);
 	ffBtn.setOnClickListener(new OnClickListener() {
 
 	    @Override
 	    public void onClick(View v) {
-		// TODO Auto-generated method stub
-		// new
-		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-		// + "fastFoward/");
+		new JSONRetreiver(new IAsyncTaskListener() {
+
+		    @Override
+		    public void onPostExecute(JSONObject result) {
+			try {
+			    String time = result.getString("time");
+			    timeSongTextView.setText(time);
+			} catch (JSONException e) {
+			    e.printStackTrace();
+			}
+		    }
+		}).execute("http://highwizard.com:8080/",
+			"player/seek/?time=10");
 	    }
 	});
 
-	nextBtn = (Button) findViewById(R.id.nextBtn);
+	nextBtn = (ImageButton) findViewById(R.id.nextBtn);
 	nextBtn.setOnClickListener(new OnClickListener() {
 
 	    @Override
 	    public void onClick(View v) {
-		// TODO Auto-generated method stub
-		// new
-		// JSONRetreiver(activity).execute("http://highwizard.com:8080/"
-		// + "next/");
+		new JSONRetreiver(new IAsyncTaskListener() {
+
+		    @Override
+		    public void onPostExecute(JSONObject result) {
+			try {
+			    String playing = result.getString("isPlaying");
+			    if (playing.equals("false")) {
+				playBtn.setEnabled(true);
+				pauseBtn.setEnabled(false);
+				Toast.makeText(getApplication(),
+					"Nothing to play.", Toast.LENGTH_LONG)
+					.show();
+			    }
+			    timer.cancel();
+			    startTimer();
+			} catch (JSONException e) {
+			    e.printStackTrace();
+			}
+
+		    }
+		}).execute("http://highwizard.com:8080/", "player/next/");
 	    }
 	});
 
 	// Time
 	timeSeekBar = (SeekBar) findViewById(R.id.timeSeekBar);
-	// new JSONRetreiver(activity).execute("http://highwizard.com:8080/" +
-	// "play/");
-	timeSeekBar.setMax(100/* temps de la chanson */);
 	timeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 	    @Override
@@ -157,11 +228,20 @@ public class MediaControllerActivity extends Activity implements
 	    @Override
 	    public void onProgressChanged(SeekBar seekBar, int progress,
 		    boolean fromUser) {
-		// TODO envoyer nouvelle position
 
+		new JSONRetreiver(new IAsyncTaskListener() {
+
+		    @Override
+		    public void onPostExecute(JSONObject result) {
+		    }
+		}).execute("http://highwizard.com:8080/", "seek/?time="
+			+ progress);
 	    }
 	});
 
+    }
+
+    public void startTimer() {
 	// Reference :
 	// http://www.anddev.org/video-tut_-_playing_mediamp3_on_the_emulator-t156-s60.html
 	timer.schedule(new TimerTask() {
