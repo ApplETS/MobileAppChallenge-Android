@@ -58,7 +58,7 @@ public class ArtistAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-	return files.length() + images.length() + folders.length();
+	return files.length() + folders.length();
     }
 
     @Override
